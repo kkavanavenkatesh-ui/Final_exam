@@ -1,0 +1,76 @@
+Create the Directory and Project
+Run these commands to set up the workspace:
+
+PowerShell
+# Create the root folder
+mkdir C:\Users\Kavana\Experiment8
+cd C:\Users\Kavana\Experiment8
+
+# Create the standard Maven structure
+mkdir -p src\main\java\com\lab
+2. Create the Necessary Files
+You need a basic pom.xml and a Java file so Jenkins has something to build.
+
+A. Create the Java File:
+Run notepad src\main\java\com\lab\App.java and paste:
+
+Java
+package com.lab;
+public class App {
+    public static void main(String[] args) {
+        System.out.println("Jenkins Auto-Trigger Test!");
+    }
+}
+B. Create the pom.xml:
+Run notepad pom.xml and paste:
+
+XML
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.lab</groupId>
+  <artifactId>experiment-8</artifactId>
+  <version>1.0-SNAPSHOT</version>
+</project>
+3. Connect to GitHub (The "SCM" Part)
+Before configuring Jenkins, your folder must become a Git repository.
+
+Go to GitHub.com and create a new repository named exp-8-trigger.
+
+Run these commands in your terminal:
+
+PowerShell
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M master
+git remote add origin https://github.com/your-username/exp-8-trigger.git
+git push -u origin master
+4. Configure Jenkins Build Triggers
+Now, we tell Jenkins to watch that GitHub repository.
+
+Create Job: In Jenkins, click New Item -> Freestyle Project -> Name it AutoTriggerJob.
+
+Source Code Management: Select Git and paste your GitHub URL.
+
+Build Triggers (The Task):
+
+Check Poll SCM.
+
+In the Schedule box, type: * * * * * (This means check for changes every 1 minute).
+
+Build Steps: Select Invoke top-level Maven targets and set the Goal to clean package.
+
+Save.
+
+5. The Outcome: Automatic Triggering
+To prove it works, you must make a change to your code and see Jenkins react without you touching it.
+
+Modify Code: notepad src\main\java\com\lab\App.java. Add a comment like // Trigger Test. Save and exit.
+
+Push Change:
+
+PowerShell
+git add .
+git commit -m "Testing auto-trigger"
+git push origin master
